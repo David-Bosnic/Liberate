@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Env struct {
 	OllamaAPI  string
@@ -37,14 +40,21 @@ type Tool struct {
 	Function Function `json:"function"`
 }
 
+type Options struct {
+	Temperature float32 `json:"temperature"`
+	NumCtx      int     `json:"numctx"`
+}
+
 type Tools []Tool
 
 type OllamaPayload struct {
-	Model    string    `json:"model"`
-	Messages []Message `json:"messages"`
-	Think    bool      `json:"think"`
-	Stream   bool      `json:"stream"`
-	Tools    Tools     `json:"tools"`
+	Model    string          `json:"model"`
+	Messages []Message       `json:"messages"`
+	Think    bool            `json:"think"`
+	Stream   bool            `json:"stream"`
+	Tools    Tools           `json:"tools"`
+	Options  Options         `json:"options"`
+	Format   json.RawMessage `json:"format,omitempty"`
 }
 
 type OllamaOut struct {
