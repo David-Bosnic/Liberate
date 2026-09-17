@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Liberate</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h1 {
+        font-family: "UnifrakturCook", serif;
+        font-size: 64px;
+        margin-bottom: 20px;
+      }
+
+      #box {
+        width: 500px;
+        max-width: 90%;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 24px;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #888;
+      }
+
+      #results {
+        margin-top: 20px;
+      }
+
+      #results a {
+        display: block;
+        margin: 6px 0;
+      }
+
+      #status {
+        margin-top: 10px;
+        color: #888;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Liberate</h1>
+    <div id="box">
+      <input
+        type="text"
+        id="query"
+        placeholder="Type a prompt and press Enter"
+        autofocus
+      />
+      <div id="status"></div>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      const input = document.getElementById("query");
+      const resultsDiv = document.getElementById("results");
+      const statusDiv = document.getElementById("status");
+
+      input.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+          const prompt = input.value.trim();
+          if (!prompt) return;
+
+          resultsDiv.innerHTML = "";
+          statusDiv.textContent = "Loading...";
+
+          try {
+            const res = await fetch("/api", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ prompt }),
+            });
+
+            if (!res.ok) {
+              throw new Error("Request failed: " + res.status);
+            }
+
+            const data = await res.json();
+            statusDiv.textContent = "";
+
+            // Handle either {"links": [...]} or {"links": "a", "links2": "b", ...}-style responses
+            let links = [];
+            if (Array.isArray(data.links)) {
+              links = data.links;
+            } else {
+              links = Object.values(data);
+            }
+
+            if (links.length === 0) {
+              resultsDiv.textContent = "No results.";
+            } else {
+              links.forEach((link) => {
+                const a = document.createElement("a");
+                a.href = link;
+                a.textContent = link;
+                a.target = "_blank";
+                resultsDiv.appendChild(a);
+              });
+            }
+          } catch (err) {
+            statusDiv.textContent = "Error: " + err.message;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

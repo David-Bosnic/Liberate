@@ -7,7 +7,6 @@ import (
 	"net/url"
 )
 
-// TODO: Not hardcode endpoint
 func InternetSearch(httpClient *http.Client, query []byte, reqURL string) ([]SearxResult, error) {
 	params := url.Values{}
 	params.Set("q", string(query))

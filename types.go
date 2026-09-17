@@ -5,6 +5,14 @@ import (
 	"time"
 )
 
+type LiberateRequest struct {
+	Prompt string `json:"prompt"`
+}
+
+type LiberateResponse struct {
+	Links []string `json:"links"`
+}
+
 type Env struct {
 	OllamaAPI  string
 	SearXNGAPI string
