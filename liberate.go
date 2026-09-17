@@ -92,9 +92,9 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 		case GREAT, GOOD, OK:
 			links = append(links, searxResults[i].URL)
 			//TODO: Just making this short in the meantime. This should be streamed to the user via a channel
-			if len(links) == 3 {
-				return links, nil
-			}
+			// if len(links) == 3 {
+			// 	return links, nil
+			// }
 		case BAD, POOR:
 			continue
 		}
