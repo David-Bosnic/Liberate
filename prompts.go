@@ -48,6 +48,7 @@ Output: https://example.com/article#:~:text=Sales%20grew%20steadily%20in%20Q1,re
 
 `
 
+// TODO: replace promptScale with prompt embedding system
 const PromptScale = `Rate how well this page answers the question, using this scale:
 		1 = Completely unrelated or no usable content
 		2 = Barely related, doesn't address the question

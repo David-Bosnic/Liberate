@@ -14,8 +14,9 @@ type LiberateResponse struct {
 }
 
 type Env struct {
-	OllamaAPI  string
-	SearXNGAPI string
+	OllamaAPI    string
+	SearXNGAPI   string
+	FrontendPort string
 }
 
 //NOTE: There needs to be a memory held between prompts

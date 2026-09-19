@@ -7,12 +7,11 @@ import (
 	"strings"
 )
 
-func InitEnv() Env {
+func InitEnv() (Env, error) {
 	//Reads local file and does an error check
 	file, err := os.Open("./.env")
 	if err != nil {
-		fmt.Printf("Err %v\n", err)
-		os.Exit(1)
+		return Env{}, fmt.Errorf("Err %v\n", err)
 	}
 	//Making sure the file is closed out
 	defer file.Close()
@@ -21,11 +20,11 @@ func InitEnv() Env {
 	scanner := bufio.NewScanner(file)
 
 	//Reading .env file by line
-	var ollamaAPI, searcxngAPI string
+	var ollamaAPI, searcxngAPI, frontendPort string
 
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			panic(scanner.Err().Error())
+			return Env{}, scanner.Err()
 		}
 		line := scanner.Text()
 		if strings.Contains(line, "OLLAMA_API") {
@@ -34,11 +33,18 @@ func InitEnv() Env {
 		if strings.Contains(line, "SEARXNG_API") {
 			searcxngAPI = strings.TrimPrefix(line, "SEARXNG_API=")
 		}
+		if strings.Contains(line, "FRONTEND_PORT") {
+			frontendPort = strings.TrimPrefix(line, "FRONTEND_PORT=")
+		}
 
 	}
-	env := Env{
-		OllamaAPI:  ollamaAPI,
-		SearXNGAPI: searcxngAPI,
+	if ollamaAPI == "" || searcxngAPI == "" || frontendPort == "" {
+		return Env{}, fmt.Errorf("failed to recieve all .env information")
 	}
-	return env
+	env := Env{
+		OllamaAPI:    ollamaAPI,
+		SearXNGAPI:   searcxngAPI,
+		FrontendPort: frontendPort,
+	}
+	return env, nil
 }

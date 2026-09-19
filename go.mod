@@ -1,4 +1,4 @@
-module go-liberate
+module liberate
 
 go 1.26.5
 

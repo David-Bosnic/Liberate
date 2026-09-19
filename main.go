@@ -32,7 +32,11 @@ func init() {
 		log.Fatal(err)
 	}
 	Logger = log.New(file, "", 0)
-	ENV = InitEnv()
+	ENV, err = InitEnv()
+	if err != nil {
+		fmt.Println("Failed to init env:", err)
+		os.Exit(1)
+	}
 }
 
 func main() {
@@ -43,8 +47,9 @@ func main() {
 
 	http.HandleFunc("/api", liberateHandler(httpClient))
 
-	fmt.Println("Running Liberate on port :8081")
-	http.ListenAndServe(":8081", nil)
+	fmt.Printf("Running Liberate on http://localhost%s\n", ENV.FrontendPort)
+	log.Fatal(http.ListenAndServe(ENV.FrontendPort, nil))
+
 }
 
 func liberateHandler(client *http.Client) http.HandlerFunc {
