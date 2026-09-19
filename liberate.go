@@ -64,7 +64,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 			Logger.Println("Failed to render", searxResults[i].URL)
 			continue
 		}
-		//TODO: See if this is actually an issue with performance later on
+		//TODO: Need to see if this is actually an issue with performance later on
 		if len(buf.String()) >= 4000 {
 			continue
 		}
@@ -91,10 +91,6 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 		switch rating {
 		case GREAT, GOOD, OK:
 			links = append(links, searxResults[i].URL)
-			//TODO: Just making this short in the meantime. This should be streamed to the user via a channel
-			// if len(links) == 3 {
-			// 	return links, nil
-			// }
 		case BAD, POOR:
 			continue
 		}
