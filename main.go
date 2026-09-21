@@ -11,7 +11,9 @@ import (
 	"regexp"
 )
 
-// NOTE: Will implement enum for the 2-3 tools calls require to make this work
+// NOTE: Tool calls are under the llms discretion. More likely forcing situtation
+// will be better for consistancy.
+
 // type ToolCall int
 //
 // const (

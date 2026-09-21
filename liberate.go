@@ -32,8 +32,10 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 			{Role: "user", Content: context},
 		},
 		Options: Options{
+			//Lower Temperature to improve consistancy
 			Temperature: 0.2,
 		},
+		// Think off for speed improvments.
 		Think:  false,
 		Stream: false,
 	}
@@ -64,7 +66,8 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 			Logger.Println("Failed to render", searxResults[i].URL)
 			continue
 		}
-		//TODO: Need to see if this is actually an issue with performance later on
+		//TODO: Need to see if this is actually an issue with performance. Might be better
+		// to do a partial parsing to not ignore larger sites
 		if len(buf.String()) >= 4000 {
 			continue
 		}
