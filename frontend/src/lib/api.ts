@@ -7,7 +7,7 @@ export interface LiberateResponse {
 }
 
 const url = "http://localhost:8081/api";
-const MOCK = true;
+const MOCK = false;
 
 export async function CallLiberate(prompt: string): Promise<LiberateResponse> {
   if (MOCK) {

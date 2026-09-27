@@ -24,7 +24,7 @@
 </script>
 
 <div
-    class=" flex flex-col items-center justify-center gap-4 py-10"
+    class=" flex flex-col items-center justify-center gap-4 py-4"
     transition:fade={{ duration: 200 }}
 >
     <div class="text-7xl text-primary-500 font-semibold">Liberate</div>

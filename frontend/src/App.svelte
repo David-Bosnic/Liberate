@@ -5,5 +5,7 @@
 
 <div class="flex flex-col justify-center items-center">
     <SearchBar />
-    <ResultsList />
+    <div class="w-full max-w-md">
+        <ResultsList />
+    </div>
 </div>
