@@ -3,7 +3,7 @@
     import ResultsList from "./lib/ResultsList.svelte";
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col justify-center items-center">
     <SearchBar />
     <ResultsList />
 </div>
