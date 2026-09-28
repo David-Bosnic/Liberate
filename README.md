@@ -50,5 +50,6 @@ search:
 1. `git clone https://github.com/David-Bosnic/Liberate`
 2. `cp example.env .env` then modify the ports at which you have ollama and searxng running. Included is
    the port at which the frontend is rendered; change if required.
-3. `go build` and `./liberate`
-4. Should be running on `http://localhost:8081/` unless .env `FRONTEND_PORT=8081` is modified
+3. `cd ./frontend && npm run build` 
+4. go back to root then `go build` and `./liberate`
+5. Should be running on `http://localhost:8081/` unless .env `FRONTEND_PORT=8081` is modified
