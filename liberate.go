@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"codeberg.org/readeck/go-readability/v2"
@@ -55,48 +56,60 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 	}
 
 	var links []string
-	for i := range searxResults {
-		htmlContent, err := readability.FromURL(searxResults[i].URL, time.Second*30)
-		if err != nil {
-			Logger.Println("Failed to get content", err)
-			continue
-		}
-		var buf bytes.Buffer
-		if err := htmlContent.RenderText(&buf); err != nil {
-			Logger.Println("Failed to render", searxResults[i].URL)
-			continue
-		}
-		//TODO: Need to see if this is actually an issue with performance. Might be better
-		// to do a partial parsing to not ignore larger sites
-		if len(buf.String()) >= 4000 {
-			continue
-		}
-		builtPrompt := fmt.Sprintf(PromptScale, userPrompt, buf.String())
-		request = OllamaPayload{
-			Model: "qwen2.5:3b",
-			Messages: []Message{
-				{Role: "user", Content: builtPrompt},
-			},
-			Options: Options{
-				Temperature: 1,
-				NumCtx:      8192,
-			},
-			Format: json.RawMessage(`{"type":"string","enum":["1","2","3","4","5"]}`),
-			Think:  false,
-			Stream: false,
-		}
-		out, err = CallOllama(httpClient, ollamaEndpoint, request)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to call Ollama: %e", err)
-		}
-		rating := strings.Trim(out.Message.Content, `"`)
+	var linksMutex sync.Mutex
+	var wg sync.WaitGroup
 
-		switch rating {
-		case GREAT, GOOD, OK:
-			links = append(links, searxResults[i].URL)
-		case BAD, POOR:
-			continue
-		}
+	for i := range searxResults {
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+
+			htmlContent, err := readability.FromURL(searxResults[index].URL, time.Second*30)
+			if err != nil {
+				Logger.Println("Failed to get content", err)
+				return
+			}
+			var buf bytes.Buffer
+			if err := htmlContent.RenderText(&buf); err != nil {
+				Logger.Println("Failed to render", searxResults[index].URL)
+				return
+			}
+			//TODO: Need to see if this is actually an issue with performance. Might be better
+			// to do a partial parsing to not ignore larger sites
+			if len(buf.String()) >= 4000 {
+				return
+			}
+			builtPrompt := fmt.Sprintf(PromptScale, userPrompt, buf.String())
+			request := OllamaPayload{
+				Model: "qwen2.5:3b",
+				Messages: []Message{
+					{Role: "user", Content: builtPrompt},
+				},
+				Options: Options{
+					Temperature: 1,
+					NumCtx:      8192,
+				},
+				Format: json.RawMessage(`{"type":"string","enum":["1","2","3","4","5"]}`),
+				Think:  false,
+				Stream: false,
+			}
+			out, err := CallOllama(httpClient, ollamaEndpoint, request)
+			if err != nil {
+				Logger.Printf("Failed to call Ollama for %s: %v", searxResults[index].URL, err)
+				return
+			}
+			rating := strings.Trim(out.Message.Content, `"`)
+
+			switch rating {
+			case GREAT, GOOD, OK:
+				linksMutex.Lock()
+				links = append(links, searxResults[index].URL)
+				linksMutex.Unlock()
+			case BAD, POOR:
+				return
+			}
+		}(i)
 	}
+	wg.Wait()
 	return links, nil
 }
