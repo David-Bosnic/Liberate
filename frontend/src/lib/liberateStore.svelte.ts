@@ -1,4 +1,4 @@
 export const liberateState = $state({
   prompt: "",
-  links: [] as string[],
+  links: [] as Array<{url: string, rating: string}>,
 });

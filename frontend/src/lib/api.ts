@@ -2,8 +2,13 @@ export interface LiberateRequest {
   prompt: string;
 }
 
+export interface LinkRating {
+  url: string;
+  rating: string;
+}
+
 export interface LiberateResponse {
-  links: string[];
+  links: LinkRating[];
 }
 
 const url = "http://localhost:8081/api";
@@ -13,7 +18,11 @@ export async function CallLiberate(prompt: string): Promise<LiberateResponse> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 1000));
     return {
-      links: ["http://apple.com", "http://corn.com", "http://taco.com"],
+      links: [
+        { url: "http://apple.com", rating: "4" },
+        { url: "http://corn.com", rating: "3" },
+        { url: "http://taco.com", rating: "5" },
+      ],
     };
   }
   const res = await fetch(url, {

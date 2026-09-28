@@ -9,8 +9,13 @@ type LiberateRequest struct {
 	Prompt string `json:"prompt"`
 }
 
+type LinkRating struct {
+	URL    string `json:"url"`
+	Rating string `json:"rating"`
+}
+
 type LiberateResponse struct {
-	Links []string `json:"links"`
+	Links []LinkRating `json:"links"`
 }
 
 type Env struct {

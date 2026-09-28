@@ -20,7 +20,7 @@ const (
 	GREAT = "5"
 )
 
-func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
+func RunLiberate(httpClient *http.Client, userPrompt string) ([]LinkRating, error) {
 
 	ollamaEndpoint := ENV.OllamaAPI
 	searxngEndpoint := ENV.SearXNGAPI
@@ -28,7 +28,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 	context := fmt.Sprintf(PromptMakeLink, userPrompt)
 
 	request := OllamaPayload{
-		Model: "qwen2.5:3b",
+		Model: "qwen3.6:35b",
 		Messages: []Message{
 			{Role: "user", Content: context},
 		},
@@ -55,7 +55,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 		return nil, fmt.Errorf("searxResults did not return any links")
 	}
 
-	var links []string
+	var links []LinkRating
 	var linksMutex sync.Mutex
 	var wg sync.WaitGroup
 
@@ -81,7 +81,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 			}
 			builtPrompt := fmt.Sprintf(PromptScale, userPrompt, buf.String())
 			request := OllamaPayload{
-				Model: "qwen2.5:3b",
+				Model: "qwen3.6:35b",
 				Messages: []Message{
 					{Role: "user", Content: builtPrompt},
 				},
@@ -103,7 +103,10 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]string, error) {
 			switch rating {
 			case GREAT, GOOD, OK:
 				linksMutex.Lock()
-				links = append(links, searxResults[index].URL)
+				links = append(links, LinkRating{
+					URL:    searxResults[index].URL,
+					Rating: rating,
+				})
 				linksMutex.Unlock()
 			case BAD, POOR:
 				return
