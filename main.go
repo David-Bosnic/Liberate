@@ -44,7 +44,7 @@ func init() {
 func main() {
 	httpClient := &http.Client{}
 
-	fs := http.FileServer(http.Dir("./frontend"))
+	fs := http.FileServer(http.Dir("./frontend/dist/"))
 	http.Handle("/", fs)
 
 	http.HandleFunc("/api", liberateHandler(httpClient))
