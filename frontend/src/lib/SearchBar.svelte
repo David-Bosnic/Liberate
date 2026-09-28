@@ -12,7 +12,7 @@
             error = null;
             try {
                 const result = await CallLiberate(liberateState.prompt);
-                liberateState.links = result.Links;
+                liberateState.links = result.links;
             } catch (err) {
                 error =
                     err instanceof Error ? err.message : "Something went wrong";
