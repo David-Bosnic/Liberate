@@ -21,14 +21,14 @@ things relevant to your query.
 
 **In no particular order**
 
-- Reduce time to access links to be comparable to just using a search engine
-- [URI fragmentation](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment) for improved searching, i.e.,
+- [ ] Reduce time to access links to be comparable to just using a search engine
+- [ ] [URI fragmentation](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment) for improved searching, i.e.,
   finding the exact location of relevant information using highlighting.
-- Frontend customization and depth
-- Flexible LLM options for a wider range of hardware options
-- History and recall of queries and responses
-- Docker containerization to simplify deployment to one command
-- Concurrent LLM querying
+- [ ] Frontend customization and depth
+- [ ] Flexible LLM options for a wider range of hardware options
+- [ ] History and recall of queries and responses
+- [ ] Docker containerization to simplify deployment to one command
+- [x] ~Concurrent LLM querying~
 
 # Installation
 
