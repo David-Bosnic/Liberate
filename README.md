@@ -19,7 +19,7 @@ things relevant to your query.
 
 # Roadmap
 
-**In no particular order**
+**In no particular order and with no guarantee that it will be developed**
 
 - [ ] Reduce time to access links to be comparable to just using a search engine
 - [ ] [URI fragmentation](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment) for improved searching, i.e.,
