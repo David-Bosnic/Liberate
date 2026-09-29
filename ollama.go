@@ -8,8 +8,6 @@ import (
 	"net/http"
 )
 
-// TODO: Some sort of check that the model responded with a request
-// rather then denied a payload
 func CallOllama(httpClient *http.Client, url string, payload OllamaPayload) (*OllamaOut, error) {
 	body, err := json.Marshal(payload)
 	if err != nil {
