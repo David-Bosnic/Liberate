@@ -28,7 +28,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]LinkRating, erro
 	context := fmt.Sprintf(PromptMakeLink, userPrompt)
 
 	request := OllamaPayload{
-		Model: "qwen3.6:35b",
+		Model: "qwen2.5:3b",
 		Messages: []Message{
 			{Role: "user", Content: context},
 		},
@@ -81,7 +81,7 @@ func RunLiberate(httpClient *http.Client, userPrompt string) ([]LinkRating, erro
 			}
 			builtPrompt := fmt.Sprintf(PromptScale, userPrompt, buf.String())
 			request := OllamaPayload{
-				Model: "qwen3.6:35b",
+				Model: "qwen2.5:3b",
 				Messages: []Message{
 					{Role: "user", Content: builtPrompt},
 				},
